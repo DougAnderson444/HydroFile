@@ -4,7 +4,9 @@ A small library to sail the seas of IPFS CIDs.
 ## Branches:
 
 main
+
 [json-ld](https://github.com/DougAnderson444/HydroFile/tree/ckartik/jsonld-experiment) (saved in IPLD)
+
 [hyperbee](https://github.com/DougAnderson444/HydroFile/tree/ckartik/ipfs-hyperbee-mvp) (CIDs saved in a hypercore btree)
 
 ## Before you start
