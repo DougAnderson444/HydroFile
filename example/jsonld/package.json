@@ -2,6 +2,7 @@
   "name": "hydrofile",
   "version": "0.0.1",
   "author": "Kartik Chopra, Doug Anderson",
+  "main": "mvp.js",
   "scripts": {
     "start": "node ./mvp.js"
   },
