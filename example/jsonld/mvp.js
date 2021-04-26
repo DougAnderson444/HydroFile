@@ -1,6 +1,10 @@
-const IPFS = require('ipfs-core')
+const IPFS = require('ipfs-core');
 const jsonld = require('jsonld');
 
-const ipfs = await IPFS.create()
-const { cid } = await ipfs.add('Hello world')
-console.info(cid)
+async function genCID() {
+    const ipfs = await IPFS.create();
+    const {cid} = await ipfs.add("Hello World!");
+    console.log(cid);
+}
+
+genCID().then(cid => {console.log(cid)});
