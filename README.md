@@ -1,14 +1,20 @@
 # HydroFile
 A small library to sail the seas of IPFS CIDs.
 
+## Branches:
+
+main
+[json-ld](https://github.com/DougAnderson444/HydroFile/tree/ckartik/jsonld-experiment) (saved in IPLD)
+[hyperbee](https://github.com/DougAnderson444/HydroFile/tree/ckartik/ipfs-hyperbee-mvp) (CIDs saved in a hypercore btree)
+
 ## Before you start
 First clone this repo, install dependencies in the project root and build the project.
 
 ```bash
-$ git clone https://github.com/ipfs/js-ipfs.git
-$ cd js-ipfs
+$ git clone https://github.com/DougAnderson444/HydroFile.git
+$ cd hydrofile
 $ npm install
-$ npm run build
+$ npm run start
 ```
 
 ## Examples
