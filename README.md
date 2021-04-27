@@ -39,8 +39,6 @@ A small wrapper library to sail the seas of IPFS CIDs.
 
 ```
 
-
-
 ## Branches:
 
 main
@@ -61,6 +59,17 @@ $ npm run start
 
 ## Examples
 
+Great example usage in the tests.
+
+To run the tests, simply run `mocha` in the dictory 
+
+```
+mocha
+```
+or have npm run the `test` script from `package.json`;
+```
+npm run test
+```
 ### Currently working with:
 - ...
 
