@@ -7,11 +7,11 @@ A small wrapper library to sail the seas of IPFS CIDs.
 ```js
 
     // instantiate a new HydroFile
-    const hydroFile = new HydroFile()
+    let hydroFile = new HydroFile()
 
     // or load a previously built HydroFile
     const hydro = 'badbeefbadbeefbadbeefbadbeefbadbeefbadbeefbadbeef'
-    const hydroFile = new HydroFile(hydro)
+    hydroFile = new HydroFile(hydro)
 
     // TODO: load hydroFile id from Ethereum or ENS?
 
@@ -56,6 +56,12 @@ $ cd hydrofile
 $ npm install
 $ npm run start
 ```
+## Architecture
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/DougAnderson444/HydroFile/master/static/HydroFile-architecture.png">
+<br/>
+
 
 ## Examples
 
