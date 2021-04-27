@@ -16,7 +16,17 @@ A small wrapper library to sail the seas of IPFS CIDs.
     // TODO: load hydroFile id from Ethereum or ENS?
 
     // name the upload and optionally give it some more meta data, like previous version 
-    const CID = await hydroFile.track(ipfs.add("Hello world"), { name: "hello.txt" , prevCID, keywords })
+    const name = "hello.txt" // name what you are saving
+    const CID = await hydroFile.track(await ipfs.add("Hello world"), { name: "hello.txt" , prevCID, keywords })
+
+    // or syncronously
+    ipfs.add("Hello world").then((CID)=>{
+        hydroFile.track(CID, { name: "hello.txt" , prevCID, keywords })
+    })
+
+    const helloRotCID = hydroFile.getRoot(name)
+    //  expect(helloRotCID).to.equal(CID)
+
 
     // all CIDs can be rolled up into one root CID
     const rootCID = hydroFile.getRoot()
