@@ -1,5 +1,24 @@
 # HydroFile
-A small library to sail the seas of IPFS CIDs.
+
+A small wrapper library to sail the seas of IPFS CIDs.
+
+## Dream API
+
+```js
+
+    // name the upload and optionally give it some more meta data, like previous version 
+    const CID = await hydroFile.track(ipfs.add("Hello world"), { fileName: "hello.txt" [, previous: prevCID]})
+
+    // all CIDs can be rolled up into one root CID
+    const rootCID = hydroFile.getRoot()
+
+    // get last 10 rootCIDs
+    const rootCIDs = hydroFile.getRoot(10)
+
+    fileCID = hydroFile.getFile("hello.txt")
+    const [searchResults] = hydroFile.find("hello") // all CID objects with meta data including "hello" keyword
+
+```
 
 ## Branches:
 
