@@ -8,9 +8,12 @@ let hydroFile
 let ipfs
 
 describe('Test', function () {
+  // 'not the proper"
+
   before(async function () {
     // runs once before the first test in this block
     ipfs = await IPFS.create()
+    // console.log("Ipfs init'd")
   })
 
   after(async function () {
