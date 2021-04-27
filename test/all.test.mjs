@@ -11,9 +11,10 @@ describe('Test', function () {
     // runs once before the first test in this block
   })
 
-  it('expect default hydroFile id to be 42', () => {
+  it('expect to be able to make a hydroFile object with a on zero id', async () => {
     hydroFile = new HydroFile()
+    await hydroFile.ready()
 
-    expect(hydroFile.id).to.equal(42)
+    expect(hydroFile.hypercore.key.toString('hex')).to.have.lengthOf(64)
   })
 })
