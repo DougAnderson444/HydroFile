@@ -1,12 +1,21 @@
 
-import { default as hyperSDK } from 'hyper-sdk'
+// import { default as hyperSDK } from 'hyper-sdk'
+
+import hyperSDK from 'hyper-sdk'
+import * as IPFS from 'ipfs-core'
 
 export class HydroFile {
-  constructor (name = '') {
+  constructor (ipfs, { name = '', persist = true }) {
+    this.ipfs = ipfs
     this.name = name || 'DEFAULT_NAME'
+    this.persist = persist
   }
 
   async ready () {
+    // set up IPFS/IPLD, a place to roll up CIDs
+    this.ipfs = IPFS.create()
+
+    // set up hypercore, a place to save the CIDs under a mutable key (identity)
     const { Hypercore } = await hyperSDK({
       persist: true
     })
@@ -26,5 +35,10 @@ export class HydroFile {
 
     // You should wait for the drive to be totally initialized
     await this.hypercore.ready()
+  }
+
+  async track (CID, params) {
+    await CID // assuming it's a js promise that hasn't been fulfilled yet, let's wait for that
+    return CID.toString()
   }
 }
