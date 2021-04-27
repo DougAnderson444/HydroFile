@@ -19,6 +19,16 @@ $ npm run build
 
 ## Examples
 
+Run the example in the cli:
+
+```
+node ./mvp.js
+
+# or
+
+npm run start
+```
+
 ### Currently working with:
 - ...
 
