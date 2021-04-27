@@ -9,12 +9,11 @@ export class HydroFile {
     this.ipfs = ipfs
     this.name = name || 'DEFAULT_NAME'
     this.persist = persist
+    this.threadRoots = {}
+    this.rootObj = {}
   }
 
   async ready () {
-    // set up IPFS/IPLD, a place to roll up CIDs
-    this.ipfs = IPFS.create()
-
     // set up hypercore, a place to save the CIDs under a mutable key (identity)
     const { Hypercore } = await hyperSDK({
       persist: true
@@ -37,8 +36,59 @@ export class HydroFile {
     await this.hypercore.ready()
   }
 
+  setRootCID (type, name, CID) {
+    if (this.threadRoots[type] === undefined) this.threadRoots[type] = {} // initialize object if this is the first property
+    this.threadRoots[type][name] = CID
+  }
+
+  getRootCID (type, name) {
+    // first time this is accessed, there is no previous CID
+    return this.threadRoots[type][name] || false
+  }
+
   async track (CID, params) {
-    await CID // assuming it's a js promise that hasn't been fulfilled yet, let's wait for that
-    return CID.toString()
+    const { name, type, keywords } = params
+
+    // get previous CID for this object name if it exists
+    const prevThreadRootCID = this.getRootCID(type, name)
+
+    // set the previous CID in the new object
+    const updatedThreadRootObject = {
+      '@context': {
+        id: '@id',
+        type: '@type'
+      },
+      id: `hypercore://${this.hypercore.key.toString('hex')}/${type}/${name}`,
+      type,
+      name,
+      cid: CID,
+      previous: prevThreadRootCID,
+      keywords
+    }
+    console.log({ updatedThreadRootObject })
+
+    // API: https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/DAG.md#ipfsdagputdagnode-options
+
+    const updatedThreadRootCID = await this.ipfs.dag.put(updatedThreadRootObject)
+    console.log({ updatedThreadRootCID })
+
+    const updatedRootCID = await this.updateRootCID(type, name, updatedThreadRootCID)
+    console.log({ updatedRootCID })
+
+    this.hypercore.append(updatedRootCID)
+
+    return { updatedThreadRootCID, updatedRootCID }
+  }
+
+  async updateRootCID (type, name, updatedThreadRootCID) {
+    // set up the object
+    if (this.rootObj[type] === undefined) this.rootObj[type] = {} // initialize object if this is the first property
+
+    this.rootObj[type][name] = updatedThreadRootCID // should this be a Map instead? Does it matter?
+
+    console.log({ rootObj: this.rootObj })
+
+    const updatedRootCID = await this.ipfs.dag.put(this.rootObj)
+    return updatedRootCID // save this to hypercore, it's the root root CID
   }
 }
