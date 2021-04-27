@@ -38,15 +38,27 @@ describe('Test', function () {
 
     const { updatedThreadRootCID, updatedRootCID } = await hydroFile.track(helloCID, { name, type, keywords })
 
+    console.log('length', hydroFile.hypercore.length)
+
     // check the hypercore for a match
     // API: https://github.com/hypercore-protocol/hypercore
-    hydroFile.hypercore.get(hydroFile.hypercore.length, function (err, value) {
-      if (err) console.error(err)
+    const rootCID = await hydroFile.hypercore.get(hydroFile.hypercore.length - 1)
 
-      console.log({ value })
-      expect(updatedThreadRootCID).to.equal('bafyreibblxeqpfhgjczn54rjvvh26ofhecudanluebrn2ntnodwilbv7uy')
-      expect(updatedRootCID).to.equal('bafyreiajjh7zooh2hiqebnf6sspfm3wmgrxdhcuio4jhujsbnfopzoswwu')
-    })
+    console.log({ rootCID })
+
+    // TODO: For some reason, not drillign down into the object>??
+    try {
+      const hello = await ipfs.dag.get(rootCID) // , { path: 'IPFSObject/hello.txt' }
+      console.log({ hello })
+
+      const helloDeep = await ipfs.dag.get(rootCID, { path: 'IPFSObject/hello.txt' })
+      console.log({ helloDeep }) // TypeError: string.startsWith is not a function
+    } catch (error) {
+      console.error(error)
+    }
+
+    expect(updatedThreadRootCID).to.equal('bafyreibblxeqpfhgjczn54rjvvh26ofhecudanluebrn2ntnodwilbv7uy')
+    expect(updatedRootCID).to.equal('bafyreiajjh7zooh2hiqebnf6sspfm3wmgrxdhcuio4jhujsbnfopzoswwu')
 
     // expect(helloCID.toString()).to.equal(CID)
   })

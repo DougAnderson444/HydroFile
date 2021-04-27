@@ -74,7 +74,7 @@ export class HydroFile {
 
     const updatedRootCID = await this.updateRootCID(type, name, updatedThreadRootCID)
 
-    this.hypercore.append(updatedRootCID)
+    await this.hypercore.append(updatedRootCID) // need to save the JS object
 
     return { updatedThreadRootCID, updatedRootCID }
   }
@@ -84,8 +84,6 @@ export class HydroFile {
     if (this.rootObj[type] === undefined) this.rootObj[type] = {} // initialize object if this is the first property
 
     this.rootObj[type][name] = updatedThreadRootCID // should this be a Map instead? Does it matter?
-
-    console.log({ rootObj: this.rootObj })
 
     const updatedRootCID = await this.ipfs.dag.put(this.rootObj)
     return updatedRootCID // save this to hypercore, it's the root root CID
