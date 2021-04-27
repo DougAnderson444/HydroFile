@@ -11,7 +11,7 @@ describe('Test', function () {
     // runs once before the first test in this block
   })
 
-  it('expect hydroFile id to be 42', () => {
+  it('expect default hydroFile id to be 42', () => {
     hydroFile = new HydroFile()
 
     expect(hydroFile.id).to.equal(42)
