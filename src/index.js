@@ -9,7 +9,7 @@ export class HydroFile {
     this.ipfs = ipfs
     this.name = name || 'DEFAULT_NAME'
     this.persist = persist
-    this.threadRoots = {}
+    this.threadRoots = {} // default
     this.rootObj = {}
   }
 
@@ -45,12 +45,12 @@ export class HydroFile {
 
   getRootCID (type, name) {
     // first time this is accessed, there is no previous CID
+    if (this.threadRoots[type] === undefined) this.threadRoots[type] = {} // initialize object if this is the first property
     return this.threadRoots[type][name] || false
   }
 
   async track (CID, params) {
     const { name, type, keywords } = params
-
     // get previous CID for this object name if it exists
     const prevThreadRootCID = this.getRootCID(type, name)
 
@@ -67,15 +67,12 @@ export class HydroFile {
       previous: prevThreadRootCID,
       keywords
     }
-    console.log({ updatedThreadRootObject })
 
     // API: https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/DAG.md#ipfsdagputdagnode-options
 
     const updatedThreadRootCID = await this.ipfs.dag.put(updatedThreadRootObject)
-    console.log({ updatedThreadRootCID })
 
     const updatedRootCID = await this.updateRootCID(type, name, updatedThreadRootCID)
-    console.log({ updatedRootCID })
 
     this.hypercore.append(updatedRootCID)
 

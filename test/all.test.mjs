@@ -13,7 +13,8 @@ describe('Test', function () {
   before(async function () {
     // runs once before the first test in this block
     ipfs = await IPFS.create()
-    // console.log("Ipfs init'd")
+    const id = await ipfs.id()
+    console.log("Ipfs init'd", { id: id.id })
   })
 
   after(async function () {
@@ -34,9 +35,8 @@ describe('Test', function () {
     const type = 'IPFSObject'
     const keywords = ['hello', 'text files'] // TODO: figure out how to search keywords amongst diff types
     const helloCID = await ipfs.add('Hello world') // ipfs.add(fileObject)  //or// ipfs.dag.put(object)
-    console.log({ helloCID })
 
-    const CID = await hydroFile.track(helloCID, { name, type, keywords })
+    const { updatedThreadRootCID, updatedRootCID } = await hydroFile.track(helloCID, { name, type, keywords })
 
     // check the hypercore for a match
     // API: https://github.com/hypercore-protocol/hypercore
@@ -44,7 +44,8 @@ describe('Test', function () {
       if (err) console.error(err)
 
       console.log({ value })
-      expect(value).to.equal(value)
+      expect(updatedThreadRootCID).to.equal('bafyreibblxeqpfhgjczn54rjvvh26ofhecudanluebrn2ntnodwilbv7uy')
+      expect(updatedRootCID).to.equal('bafyreiajjh7zooh2hiqebnf6sspfm3wmgrxdhcuio4jhujsbnfopzoswwu')
     })
 
     // expect(helloCID.toString()).to.equal(CID)
