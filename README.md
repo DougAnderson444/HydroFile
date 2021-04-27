@@ -59,9 +59,8 @@ $ npm run start
 ## Architecture
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/DougAnderson444/HydroFile/master/static/HydroFile-architecture.png">
+<img src="https://raw.githubusercontent.com/DougAnderson444/HydroFile/main/HydroFile-architecture.png">
 <br/>
-
 
 ## Examples
 
