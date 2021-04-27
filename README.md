@@ -6,8 +6,17 @@ A small wrapper library to sail the seas of IPFS CIDs.
 
 ```js
 
+    // instantiate a new HydroFile
+    const hydroFile = new HydroFile()
+
+    // or load a previously built HydroFile
+    const hydro = 'badbeefbadbeefbadbeefbadbeefbadbeefbadbeefbadbeef'
+    const hydroFile = new HydroFile(hydro)
+
+    // TODO: load hydroFile id from Ethereum or ENS?
+
     // name the upload and optionally give it some more meta data, like previous version 
-    const CID = await hydroFile.track(ipfs.add("Hello world"), { fileName: "hello.txt" [, previous: prevCID]})
+    const CID = await hydroFile.track(ipfs.add("Hello world"), { name: "hello.txt" , prevCID, keywords })
 
     // all CIDs can be rolled up into one root CID
     const rootCID = hydroFile.getRoot()
@@ -19,6 +28,8 @@ A small wrapper library to sail the seas of IPFS CIDs.
     const [searchResults] = hydroFile.find("hello") // all CID objects with meta data including "hello" keyword
 
 ```
+
+
 
 ## Branches:
 
