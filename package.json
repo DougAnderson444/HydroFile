@@ -1,10 +1,10 @@
 {
     "name": "hydrofile",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "type": "module",
     "main": "src/index.js",
     "scripts": {
-        "start": "node index.js",
+        "start": "node src/index.js",
         "test": "mocha"
     },
     "dependencies": {
