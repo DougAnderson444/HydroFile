@@ -73,8 +73,7 @@ export class HydroFile {
     const updatedThreadRootCID = await this.ipfs.dag.put(updatedThreadRootObject)
 
     const updatedRootCID = await this.updateRootCID(type, name, updatedThreadRootCID)
-
-    await this.hypercore.append(updatedRootCID) // need to save the JS object
+    await this.hypercore.append(updatedThreadRootObject) // need to save the JS object
 
     return { updatedThreadRootCID, updatedRootCID }
   }
