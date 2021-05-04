@@ -18,7 +18,7 @@ export class HydroFile {
     // console.log("2. Ipfs init'd")
     // set up hypercore, a place to save the CIDs under a mutable key (identity)
     const { Hypercore } = await hyperSDK({
-      persist: true
+      persist: this.persist
     })
 
     // Create a hypercore
