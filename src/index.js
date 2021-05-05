@@ -72,6 +72,8 @@ export class HydroFile {
 
     const updatedThreadRootCID = await this.ipfs.dag.put(updatedThreadRootObject)
 
+    this.setRootCID(type, name, updatedThreadRootCID)
+
     const updatedRootCID = await this.updateRootCID(type, name, updatedThreadRootCID)
 
     await this.hypercore.append(updatedRootCID) // need to save the JS object
@@ -86,6 +88,6 @@ export class HydroFile {
     this.rootObj[type][name] = updatedThreadRootCID // should this be a Map instead? Does it matter?
 
     const updatedRootCID = await this.ipfs.dag.put(this.rootObj)
-    return updatedRootCID // save this to hypercore, it's the root root CID
+    return updatedRootCID.toString() // save this to hypercore, it's the root root CID
   }
 }
