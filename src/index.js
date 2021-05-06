@@ -60,7 +60,7 @@ export class HydroFile {
         id: '@id',
         type: '@type'
       },
-      id: `hypercore://${this.hypercore.key.toString('hex')}/${type}/${name}`,
+      id: `hypercore://${this.hypercore.key.toString('hex')}/${type}/${name}`, // This value changes on each iteration causing issues.
       type,
       name,
       cid: CID,
@@ -72,7 +72,10 @@ export class HydroFile {
 
     const updatedThreadRootCID = await this.ipfs.dag.put(updatedThreadRootObject)
 
-    this.setRootCID(type, name, updatedThreadRootCID)
+    // Do we want to only change the root CID when there is an issue at the root.
+    if (prevThreadRootCID == false){
+      this.setRootCID(type, name, updatedThreadRootCID)
+    }
 
     const updatedRootCID = await this.updateRootCID(type, name, updatedThreadRootCID)
 
@@ -86,7 +89,7 @@ export class HydroFile {
     if (this.rootObj[type] === undefined) this.rootObj[type] = {} // initialize object if this is the first property
 
     this.rootObj[type][name] = updatedThreadRootCID // should this be a Map instead? Does it matter?
-
+    // console.log("Root Object value: ", this.rootObj)
     const updatedRootCID = await this.ipfs.dag.put(this.rootObj)
     return updatedRootCID.toString() // save this to hypercore, it's the root root CID
   }
