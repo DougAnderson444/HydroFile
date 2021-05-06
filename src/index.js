@@ -2,7 +2,6 @@
 // import { default as hyperSDK } from 'hyper-sdk'
 
 import hyperSDK from 'hyper-sdk'
-import * as IPFS from 'ipfs-core'
 
 export class HydroFile {
   constructor (ipfs, { name = '', persist = true }) {
