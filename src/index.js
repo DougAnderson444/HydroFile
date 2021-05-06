@@ -2,6 +2,14 @@
 // import { default as hyperSDK } from 'hyper-sdk'
 
 import hyperSDK from 'hyper-sdk'
+import _ from 'lodash'
+
+class TrieNode {
+  constructor (cid) {
+    this.children = {}
+    this.cid = cid
+  }
+}
 
 export class HydroFile {
   constructor (ipfs, { name = '', persist = true }) {
@@ -10,6 +18,7 @@ export class HydroFile {
     this.persist = persist
     this.threadRoots = {} // default
     this.rootObj = {}
+    this.keywordTrie = new TrieNode(null)
   }
 
   async ready () {
@@ -35,6 +44,42 @@ export class HydroFile {
 
     // You should wait for the drive to be totally initialized
     await this.hypercore.ready()
+  }
+
+  getCIDsForKeyword(keyword){
+    let node = this.keywordTrie
+    const cids = []
+    for (var i = 0; i < keyword.length; i++) {
+      if(!node.children[keyword[i]]){
+        return cids
+      }
+      node = node.children[keyword[i]]
+    }
+    findAllCIDsAtNode(node, cids)
+    return cids
+  }
+
+  findAllCIDsAtNode(node, cids) {
+    if (node.cid){
+      cids.push(node.cid)
+    }
+    if (!_.isEmpty(node.children)){
+      _.forEach(node.children, function (value, key){
+        findAllCIDsAtNode(value, cids)
+      })
+    }
+  }
+
+  inesrtKeyword(keyword, cid) {
+    let node = this.keywordTrie
+    for (var i = 0; i < keyword.length; i++){
+      if (!node.children[keyword[i]]) {
+        node.children[keyword[i]] = new TrieNode(null)
+      }
+      node = node.children[keyword[i]]
+    }
+
+    node.cid = cid
   }
 
   setRootCID (type, name, CID) {
@@ -70,6 +115,11 @@ export class HydroFile {
     // API: https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/DAG.md#ipfsdagputdagnode-options
 
     const updatedThreadRootCID = await this.ipfs.dag.put(updatedThreadRootObject) // Note(@DougAnderson444): This is going to return arbitrary values because of hypercore key.
+    try{
+      _.forEach(keywords, (value) => this.inesrtKeyword(value, updatedThreadRootCID))
+    } catch (err){
+      console.error(err)
+    }
 
     // Do we want to only change the root CID when there is an issue at the root.
     this.setRootCID(type, name, updatedThreadRootCID)
