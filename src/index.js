@@ -73,9 +73,7 @@ export class HydroFile {
     const updatedThreadRootCID = await this.ipfs.dag.put(updatedThreadRootObject) // Note(@DougAnderson444): This is going to return arbitrary values because of hypercore key.
 
     // Do we want to only change the root CID when there is an issue at the root.
-    if (prevThreadRootCID == false){
-      this.setRootCID(type, name, updatedThreadRootCID)
-    }
+    this.setRootCID(type, name, updatedThreadRootCID)
 
     const updatedRootCID = await this.updateRootCID(type, name, updatedThreadRootCID)
 

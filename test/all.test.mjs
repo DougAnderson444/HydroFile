@@ -37,6 +37,7 @@ describe('Test', function () {
     const keywords = ['hello', 'text files'] // TODO: figure out how to search keywords amongst diff types
     const helloResults = await ipfs.add('Hello world') // ipfs.add(fileObject)  //or// ipfs.dag.put(object)
     // const { path, cid, mode, mtime } = await ipfs.add('Hello world') // ipfs.add(fileObject)  //or// ipfs.dag.put(object)
+    console.log(helloResults.cid)
 
 
     const { updatedThreadRootCID, updatedRootCID } = await hydroFile.track(helloResults.cid, { name, type, keywords })
@@ -88,16 +89,12 @@ it('should track multiple CIDs', async () => {
       // console.log({ hello })
 
       const helloDeep = await ipfs.dag.get(rootCID, { path: 'IPFSObject/hello.txt' })
-      console.log(JSON.stringify(helloDeep.value.cid.toString(), null, 2)) // TypeError: string.startsWith is not a function
-      console.log('base58BTC', helloDeep.value.cid.toV0().toString()) // .toV1().toString() .toString('base32')
-      console.log('base32', helloDeep.value.cid.toV1().toString()) // .toV1().toString() .toString('base32')
       const {cid} = await ipfs.add("Hello New World.")
-      keywords.push("new")
       const res = await hydroFile.track(cid, {name, type, keywords})
       const newRootCID = await hydroFile.hypercore.get(hydroFile.hypercore.length - 1)
       const helloVeryDeep = await ipfs.dag.get(newRootCID, { path: 'IPFSObject/hello.txt' })
-      console.log(helloVeryDeep)
-      expect(helloVeryDeep.value.previous).to.equal(helloDeep.value.cid.toV1())
+      const prevObject = await ipfs.dag.get(helloVeryDeep.value.previous)
+      expect(prevObject.value.cid.toV1().toString()).to.equal(helloDeep.value.cid.toV1().toString())
     } catch (error) {
       console.error(error)
     }
