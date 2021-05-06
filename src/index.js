@@ -26,7 +26,7 @@ export class HydroFile {
     // https://github.com/mafintosh/hypercore
     this.hypercore = Hypercore(this.name, {
       valueEncoding: 'json',
-      persist: true
+      persist: this.persist
       // storage can be set to an instance of `random-access-*`
       // const RAI = require('random-access-idb')
       // otherwise it defaults to `random-access-web` in the browser
