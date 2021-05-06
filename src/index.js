@@ -70,7 +70,7 @@ export class HydroFile {
 
     // API: https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/DAG.md#ipfsdagputdagnode-options
 
-    const updatedThreadRootCID = await this.ipfs.dag.put(updatedThreadRootObject)
+    const updatedThreadRootCID = await this.ipfs.dag.put(updatedThreadRootObject) // Note(@DougAnderson444): This is going to return arbitrary values because of hypercore key.
 
     // Do we want to only change the root CID when there is an issue at the root.
     if (prevThreadRootCID == false){
