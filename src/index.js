@@ -55,7 +55,7 @@ export class HydroFile {
       }
       node = node.children[keyword[i]]
     }
-    findAllCIDsAtNode(node, cids)
+    this.findAllCIDsAtNode(node, cids)
     return cids
   }
 
@@ -64,13 +64,13 @@ export class HydroFile {
       cids.push(node.cid)
     }
     if (!_.isEmpty(node.children)){
-      _.forEach(node.children, function (value, key){
-        findAllCIDsAtNode(value, cids)
-      })
+      for (const child in node.children){
+        this.findAllCIDsAtNode(node.children[child], cids)
+      }
     }
   }
 
-  inesrtKeyword(keyword, cid) {
+  insertKeyword(keyword, cid) {
     let node = this.keywordTrie
     for (var i = 0; i < keyword.length; i++){
       if (!node.children[keyword[i]]) {
@@ -116,7 +116,7 @@ export class HydroFile {
 
     const updatedThreadRootCID = await this.ipfs.dag.put(updatedThreadRootObject) // Note(@DougAnderson444): This is going to return arbitrary values because of hypercore key.
     try{
-      _.forEach(keywords, (value) => this.inesrtKeyword(value, updatedThreadRootCID))
+      _.forEach(keywords, (value) => this.insertKeyword(value, updatedThreadRootCID))
     } catch (err){
       console.error(err)
     }

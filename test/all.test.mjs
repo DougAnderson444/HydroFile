@@ -100,13 +100,19 @@ it('should track multiple CIDs', async () => {
     }
   })
 
+  it('Mocked keyword search', async () => {
+      hydroFile.insertKeyword("HI", 13)
+      hydroFile.insertKeyword("HIi", 14)
+      expect(hydroFile.getCIDsForKeyword('H')).deep.to.equal([13,14])
+      expect(hydroFile.getCIDsForKeyword('HIi')).deep.to.equal([14])
+  })
+
   it('should have keyword search', async () => {
     const name = 'hello.txt' // name what you are saving
     const type = 'IPFSObject'
     const keywords = ['hello', 'text files'] // TODO: figure out how to search keywords amongst diff types
     const helloResults = await ipfs.add('Hello world') // ipfs.add(fileObject)  //or// ipfs.dag.put(object)
-    // const { path, cid, mode, mtime } = await ipfs.add('Hello world') // ipfs.add(fileObject)  //or// ipfs.dag.put(object)
-
+    const randomFile = await ipfs.add()
 
     const { updatedThreadRootCID, updatedRootCID } = await hydroFile.track(helloResults.cid, { name, type, keywords })
 
