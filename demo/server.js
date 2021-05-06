@@ -68,6 +68,12 @@ app.get('/hydrofile/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
 
+app.get('/hydrofile/keyword', (req, res) => {
+  const params = request.body.params
+  const {keyword} = params
+  response.json({cids: hydroFile.getCIDsForKeyword(keyword)})
+})
+
 app.all('/hydrofile/search/:frag', async (request, response) => {
   const frag = request.params.frag
   if (!frag) return
