@@ -103,8 +103,13 @@ it('should track multiple CIDs', async () => {
   it('Mocked keyword search', async () => {
       hydroFile.insertKeyword("HI", 13)
       hydroFile.insertKeyword("HIi", 14)
+      hydroFile.insertKeyword("dIi", 15)
       expect(hydroFile.getCIDsForKeyword('H')).deep.to.equal([13,14])
       expect(hydroFile.getCIDsForKeyword('HIi')).deep.to.equal([14])
+      expect(hydroFile.getCIDsForKeyword('H')).deep.to.equal([13, 14])
+      expect(hydroFile.getCIDsForKeyword('d')).deep.to.equal([15])
+      expect(hydroFile.getCIDsForKeyword('dI')).deep.to.equal([15])
+      expect(hydroFile.getCIDsForKeyword('dIi')).deep.to.equal([15])
   })
 
   it('should have keyword search', async () => {
