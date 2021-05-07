@@ -176,13 +176,13 @@
 	<Autocomplete {searchInputHandler} /> (TODO, broken currently)
 
 	{#if rootCID}
-		<!-- <IPFSTree key={"My HydroFiles"} bind:val={rootCID} /> -->
-		<svelte:component
+		<IPFSTree key={"My HydroFiles"} bind:val={rootCID} expanded={true} />
+		<!-- <svelte:component
 			this={IPFSTree}
 			key={"My HydroFiles"}
 			bind:val={rootCID}
 			expanded={true}
-		/>
+		/> -->
 	{/if}
 </main>
 

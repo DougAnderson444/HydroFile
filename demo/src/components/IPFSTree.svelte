@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
   import { default as IPFS, CID } from "ipfs-browser-global";
 
-  export let cid;
   export let breadcrumbs = []; // keys that lead back to the top
   export let key;
   export let val;
@@ -11,15 +10,26 @@
   let object, mounted;
 
   onMount(async () => {
-    await IPFS();
+    if (!ipfs) await IPFS();
 
-    if (val) console.log({ val }, CID.isCID(val));
+    let isCID = false;
 
-    if (CID.isCID(val)) {
+    try {
+      isCID = CID.isCID(val) || CID.isCID(new CID(val));
+    } catch (error) {
+      // console.error("isCID Error: \n", error); // it's not really an error if the val isn't a CID. CID just doesn't handle checking non-CIDs very nicely
+      isCID = false;
+    }
+
+    if (isCID) {
       console.log("Val is already CID obj", val);
-      const result = await ipfs.dag.get(val, { timeout: 400 });
-      console.log("Val is now obj", { result });
-      val = result.value;
+      try {
+        const result = await ipfs.dag.get(val, { timeout: 900 });
+        console.log("Val is now obj", { result });
+        val = result.value;
+      } catch (error) {
+        console.error("ipfs.dag.get Error: \n", error);
+      }
     }
     mounted = true;
   });
@@ -32,8 +42,6 @@
     hash = await multihashing(new Uint8Array(hash), "sha2-256");
     return new CID(version, codec, hash);
   }
-
-  $: if (cid) cid = cid; // runs reactively every time cid updates
 
   function toggle() {
     expanded = !expanded;
@@ -56,7 +64,7 @@
         <ul>
           {#each [...Object.entries(val)] as [key, val]}
             <li>
-              {key}: {JSON.stringify(val, null, 2)}
+              <!-- {key}: {JSON.stringify(val, null, 2)} -->
               {#if typeof val === "object"}
                 <svelte:self
                   {key}
