@@ -11,28 +11,31 @@
 
   onMount(async () => {
     if (!ipfs) await IPFS();
+    isValCID();
+    mounted = true;
+  });
 
-    let isCID = false;
+  async function isValCID() {
+    let isCID;
 
     try {
       isCID = CID.isCID(val) || CID.isCID(new CID(val));
     } catch (error) {
       // console.error("isCID Error: \n", error); // it's not really an error if the val isn't a CID. CID just doesn't handle checking non-CIDs very nicely
-      isCID = false;
     }
 
     if (isCID) {
       console.log("Val is already CID obj", val);
       try {
-        const result = await ipfs.dag.get(val, { timeout: 900 });
+        const result = await ipfs.dag.get(val, { timeout: 3000 });
         console.log("Val is now obj", { result });
         val = result.value;
       } catch (error) {
         console.error("ipfs.dag.get Error: \n", error);
       }
     }
-    mounted = true;
-  });
+    return val;
+  }
 
   async function valToCID(vals) {
     console.log("Val is a CID, fetching obj from IPFS", { val });
@@ -45,6 +48,7 @@
 
   function toggle() {
     expanded = !expanded;
+    isValCID();
   }
 </script>
 

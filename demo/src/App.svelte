@@ -11,6 +11,7 @@
 	let rootCID;
 	let mounted;
 	let data;
+	let expanded = false;
 
 	let allValues = new Map();
 
@@ -20,6 +21,11 @@
 
 	onMount(async () => {
 		await IPFS();
+		// get latest rootCID
+		const resp = await fetch(`/hydrofile/root/`, { method: "GET" });
+		console.log("initial ", { resp });
+		rootCID = await resp.text();
+		console.log("initial ", { rootCID });
 		mounted = true;
 	});
 
@@ -36,7 +42,7 @@
 		};
 		const resp = await postData(`/hydrofile/track/`, dataObj);
 		// clear the fields
-		console.log({ resp });
+		// console.log({ resp });
 		// const hash = await multihashing(
 		// 	new Uint8Array(resp.updatedRootCID.hash),
 		// 	"sha2-256"
@@ -52,15 +58,19 @@
 		// console.log("val from ipfs dag", { val });
 		rootCID = resp.updatedRootCID;
 
+		// refresh issue??
+		expanded = false;
+
 		data = "";
 		name = "";
 		keywords = "";
 	};
 
-	async function postData(url, data = {}) {
+	// POST is default method, but can be replaced by other methods
+	async function postData(url, data = {}, method = "POST") {
 		if (!url || !data) return;
 		const response = await fetch(url, {
-			method: "POST", // *GET, POST, PUT, DELETE, etc.
+			method: method || "POST", // *GET, POST, PUT, DELETE, etc.
 			headers: {
 				"Content-Type": "application/json",
 			},
@@ -176,7 +186,7 @@
 	<Autocomplete {searchInputHandler} /> (TODO, broken currently)
 
 	{#if rootCID}
-		<IPFSTree key={"My HydroFiles"} bind:val={rootCID} expanded={true} />
+		<IPFSTree key={"My HydroFiles"} bind:val={rootCID} expanded />
 		<!-- <svelte:component
 			this={IPFSTree}
 			key={"My HydroFiles"}

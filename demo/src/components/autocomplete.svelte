@@ -111,7 +111,7 @@
 <div class="container">
   <div class="content">
     <div class="field">
-      <label class="label" for="autocomplete">Search</label>
+      <label class="label" for="autocomplete">Keyword Search</label>
       <div on:click|stopPropagation class="autocomplete">
         <input
           type="text"

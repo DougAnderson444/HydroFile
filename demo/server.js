@@ -71,7 +71,7 @@ app.get('/hydrofile/', (req, res) => {
 
 app.get('/hydrofile/keyword/:keyword', (req, res) => {
   const keyword = req.params.keyword
-  res.json({cids: hydroFile.getCIDsForKeyword(keyword)})
+  res.json({ cids: hydroFile.getCIDsForKeyword(keyword) })
 })
 
 app.all('/hydrofile/search/:frag', async (request, response) => {
@@ -96,6 +96,12 @@ app.post('/hydrofile/track/', async (request, response) => {
 
   console.log('posted: ', { cid, params, updatedRootCID, updatedThreadRootCID })
   response.json({ name, cid, updatedRootCID, updatedThreadRootCID, hydroKey })
+})
+
+// get the servers hydroKey (the key identifying this hydroFile)
+app.all('/hydrofile/root/', async (request, response) => {
+  const rootCID = await hydroFile.hypercore.get(hydroFile.hypercore.length - 1)
+  response.send(rootCID)
 })
 
 IPFS.create().then(async (ipfs) => {
