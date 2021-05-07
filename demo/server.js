@@ -107,7 +107,7 @@ app.all('/hydrofile/root/', async (request, response) => {
 IPFS.create().then(async (ipfs) => {
   const id = await ipfs.id()
   console.log("Ipfs init'd", { id: id.id })
-  hydroFile = new HydroFile(ipfs, { persist: false })
+  hydroFile = new HydroFile(ipfs, { persist: true }) // change to false if you don't want to save to disk
   hydroFile.ready().then(() => {
     hydroKey = hydroFile.hypercore.key.toString('hex') // unique key that
     const listener = app.listen(port, () => {
