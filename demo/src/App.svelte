@@ -23,9 +23,7 @@
 		await IPFS();
 		// get latest rootCID
 		const resp = await fetch(`/hydrofile/root/`, { method: "GET" });
-		console.log("initial ", { resp });
 		rootCID = await resp.text();
-		console.log("initial ", { rootCID });
 		mounted = true;
 	});
 
@@ -41,21 +39,6 @@
 			params: { name, type, keywords },
 		};
 		const resp = await postData(`/hydrofile/track/`, dataObj);
-		// clear the fields
-		// console.log({ resp });
-		// const hash = await multihashing(
-		// 	new Uint8Array(resp.updatedRootCID.hash),
-		// 	"sha2-256"
-		// );
-		// rootCID = new CID(
-		// 	resp.updatedRootCID.version,
-		// 	resp.updatedRootCID.codec,
-		// 	hash // new Uint8Array(resp.updatedRootCID.hash)
-		// );
-		// console.log({ rootCID });
-
-		// rootObject = (await ipfs.dag.get(rootCID)).value;
-		// console.log("val from ipfs dag", { val });
 		rootCID = resp.updatedRootCID;
 
 		// refresh issue??
@@ -186,7 +169,7 @@
 	<Autocomplete {searchInputHandler} /> (TODO, broken currently)
 
 	{#if rootCID}
-		<IPFSTree key={"My HydroFiles"} bind:val={rootCID} expanded />
+		<IPFSTree key={"My HydroFiles"} bind:val={rootCID} bind:expanded />
 		<!-- <svelte:component
 			this={IPFSTree}
 			key={"My HydroFiles"}

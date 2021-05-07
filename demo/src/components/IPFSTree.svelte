@@ -8,6 +8,7 @@
   export let expanded = false;
 
   let object, mounted;
+  let isCID;
 
   onMount(async () => {
     if (!ipfs) await IPFS();
@@ -16,8 +17,6 @@
   });
 
   async function isValCID() {
-    let isCID;
-
     try {
       isCID = CID.isCID(val) || CID.isCID(new CID(val));
     } catch (error) {
@@ -25,10 +24,8 @@
     }
 
     if (isCID) {
-      console.log("Val is already CID obj", val);
       try {
         const result = await ipfs.dag.get(val, { timeout: 3000 });
-        console.log("Val is now obj", { result });
         val = result.value;
       } catch (error) {
         console.error("ipfs.dag.get Error: \n", error);
@@ -47,8 +44,8 @@
   }
 
   function toggle() {
-    expanded = !expanded;
     isValCID();
+    expanded = !expanded;
   }
 </script>
 
@@ -75,7 +72,16 @@
                   {val}
                   breadcrumbs={breadcrumbs.concat(key)}
                 />
-              {:else}{key != "value" ? key : ""}: {val}{/if}
+              {:else}{key != "value" ? key : ""}:
+                {#if key === 'cid' && isCID}
+                  <a
+                    href="https://explore.ipld.io/#/explore/{val}"
+                    target="_blank">{val}</a
+                  >
+                {:else}
+                  {val}
+                {/if}
+              {/if}
             </li>
           {/each}
         </ul>
