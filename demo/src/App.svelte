@@ -1,12 +1,14 @@
 <script>
 	import { onMount } from "svelte";
 	import Autocomplete from "./components/autocomplete.svelte";
+	import IPFSTree from "./components/IPFSTree.svelte";
 	// IPFS saver
-	import IPFS from "ipfs-browser-global";
+	import { default as IPFS, CID } from "ipfs-browser-global";
+	import multihashing from "multihashing-async";
 
 	let name, keywords;
 	let type = "text";
-	let cid;
+	let rootCID;
 	let mounted;
 	let data;
 
@@ -34,6 +36,22 @@
 		};
 		const resp = await postData(`/hydrofile/track/`, dataObj);
 		// clear the fields
+		console.log({ resp });
+		// const hash = await multihashing(
+		// 	new Uint8Array(resp.updatedRootCID.hash),
+		// 	"sha2-256"
+		// );
+		// rootCID = new CID(
+		// 	resp.updatedRootCID.version,
+		// 	resp.updatedRootCID.codec,
+		// 	hash // new Uint8Array(resp.updatedRootCID.hash)
+		// );
+		// console.log({ rootCID });
+
+		// rootObject = (await ipfs.dag.get(rootCID)).value;
+		// console.log("val from ipfs dag", { val });
+		rootCID = resp.updatedRootCID;
+
 		data = "";
 		name = "";
 		keywords = "";
@@ -157,18 +175,15 @@
 
 	<Autocomplete {searchInputHandler} /> (TODO, broken currently)
 
-	<div>
-		<p>
-			{#if allValues && allValues.size > 0}
-				All Values: {allValues.size}<br />
-				<ul>
-					{#each [...allValues.entries()] as [key, value]}
-						<li>{key.toString()}: {value.toString()}</li>
-					{/each}
-				</ul>
-			{/if}
-		</p>
-	</div>
+	{#if rootCID}
+		<!-- <IPFSTree key={"My HydroFiles"} bind:val={rootCID} /> -->
+		<svelte:component
+			this={IPFSTree}
+			key={"My HydroFiles"}
+			bind:val={rootCID}
+			expanded={true}
+		/>
+	{/if}
 </main>
 
 <style>

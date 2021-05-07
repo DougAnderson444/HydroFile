@@ -25,6 +25,7 @@ const __dirname = path.dirname(__filename)
 dotenv.config()
 
 let hydroFile
+let hydroKey
 
 const app = express()
 const port = process.env.PORT || 12345
@@ -88,8 +89,8 @@ app.post('/hydrofile/track/', async (request, response) => {
 
   const { updatedThreadRootCID, updatedRootCID } = await hydroFile.track(cid, { name, type, keywords })
 
-  console.log('posted: ', { cid, params }, { updatedRootCID }, { updatedThreadRootCID })
-  response.json({ name, cid })
+  console.log('posted: ', { cid, params, updatedRootCID, updatedThreadRootCID })
+  response.json({ name, cid, updatedRootCID, updatedThreadRootCID, hydroKey })
 })
 
 IPFS.create().then(async (ipfs) => {
@@ -97,6 +98,7 @@ IPFS.create().then(async (ipfs) => {
   console.log("Ipfs init'd", { id: id.id })
   hydroFile = new HydroFile(ipfs, { persist: false })
   hydroFile.ready().then(() => {
+    hydroKey = hydroFile.hypercore.key.toString('hex') // unique key that
     const listener = app.listen(port, () => {
       console.log(`\nServer is up at http://localhost:${port}/hydrofile/`, listener.address())
     })

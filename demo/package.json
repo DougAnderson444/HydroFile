@@ -1,5 +1,5 @@
 {
-  "name": "svelte-app",
+  "name": "hydrofile-demo",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -24,7 +24,8 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "hydrofile": "file:..",
-    "ipfs-browser-global": "github:DougAnderson444/ipfs-browser-global",
+    "ipfs-browser-global": "github:DougAnderson444/ipfs-browser-global#30b7712ac9c5070b163d938e5cbadd1960d00b65",
+    "multihashing-async": "^2.1.2",
     "sirv-cli": "^1.0.0"
   }
 }
