@@ -7,7 +7,7 @@
   export let val;
   export let expanded = false;
   const colsFunc = getContext('getCol')
-
+  
   let object, mounted;
   let isCID;
 
