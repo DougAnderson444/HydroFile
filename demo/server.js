@@ -101,7 +101,7 @@ app.post('/hydrofile/track/', async (request, response) => {
 // get the servers hydroKey (the key identifying this hydroFile)
 app.all('/hydrofile/root/', async (request, response) => {
   const rootCID = await hydroFile.hypercore.get(hydroFile.hypercore.length - 1)
-  response.send(rootCID)
+  response.send(rootCID.toString())
 })
 
 IPFS.create().then(async (ipfs) => {
@@ -112,6 +112,7 @@ IPFS.create().then(async (ipfs) => {
     hydroKey = hydroFile.hypercore.key.toString('hex') // unique key that
     const listener = app.listen(port, () => {
       console.log(`\nServer is up at http://localhost:${port}/hydrofile/`, listener.address())
+      console.log(`\nIPFS root CIDs saved to hypercore://${hydroKey} `, listener.address())
     })
   })
 })
