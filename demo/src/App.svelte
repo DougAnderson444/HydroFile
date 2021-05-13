@@ -12,6 +12,7 @@
 	let mounted;
 	let data;
 	let expanded = false;
+	let ipfsNode;
 
 	let allValues = new Map();
 
@@ -22,8 +23,10 @@
 	onMount(async () => {
 		await IPFS();
 		// get latest rootCID
+		ipfsNode = ipfs;
 		const resp = await fetch(`/hydrofile/root/`, { method: "GET" });
 		rootCID = await resp.text();
+		console.log(rootCID);
 		mounted = true;
 	});
 
@@ -40,6 +43,7 @@
 		};
 		const resp = await postData(`/hydrofile/track/`, dataObj);
 		rootCID = resp.updatedRootCID;
+		console.log("handlesubmit", rootCID);
 
 		// refresh issue??
 		expanded = false;
@@ -88,12 +92,17 @@
 	/>
 </svelte:head>
 <main>
-	<h1>HydroFile Express Svelte Demo!</h1>
+	<h1>HydroFile Demo!</h1>
 	<p>
 		Create an object to save to IPFS, then sail the seas of CIDs with your
 		objects.
 	</p>
-	{#if mounted && ipfs}IPFS Ready{/if}
+	<p>
+		Library located at <a
+			href="https://github.com/DougAnderson444/HydroFile">GitHub</a
+		>
+	</p>
+	{#if mounted && ipfsNode}IPFS Ready{/if}
 
 	<div class="container">
 		<form
@@ -166,17 +175,26 @@
 		</form>
 	</div>
 
-	<Autocomplete {searchInputHandler} /> (TODO, broken currently)
+	<Autocomplete {searchInputHandler} /> (TODO: For future implementation)
 
-	{#if rootCID}
-		<IPFSTree key={"My HydroFiles"} bind:val={rootCID} bind:expanded />
-		<!-- <svelte:component
+	<div>
+		{#if rootCID}
+			<p style="margin: 1em; padding: 1em;">
+				Rollup rootCID:
+				<a
+					href="https://explore.ipld.io/#/explore/{rootCID}"
+					target="_blank">{rootCID}</a
+				>
+			</p>
+			<IPFSTree key={"My HydroFiles"} val={rootCID} bind:expanded />
+			<!-- <svelte:component
 			this={IPFSTree}
 			key={"My HydroFiles"}
 			bind:val={rootCID}
 			expanded={true}
 		/> -->
-	{/if}
+		{/if}
+	</div>
 </main>
 
 <style>
