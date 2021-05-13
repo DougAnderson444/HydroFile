@@ -5,7 +5,7 @@
   export let breadcrumbs = []; // keys that lead back to the top
   export let key;
   export let val;
-  export let expanded = false;
+  export let expanded;
 
   let object, mounted;
   let isCID;
@@ -72,14 +72,14 @@
                   {val}
                   breadcrumbs={breadcrumbs.concat(key)}
                 />
-              {:else}{key != "value" ? key : ""}:
-                {#if key === 'cid' && isCID}
+              {:else if key === "cid"}{key}:
+                {#if key === "cid" && isCID}
                   <a
                     href="https://explore.ipld.io/#/explore/{val}"
                     target="_blank">{val}</a
                   >
                 {:else}
-                  {val}
+                  <!-- {val} -->
                 {/if}
               {/if}
             </li>
