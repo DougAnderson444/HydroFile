@@ -26,7 +26,8 @@ export class HydroFile {
     // console.log("2. Ipfs init'd")
     // set up hypercore, a place to save the CIDs under a mutable key (identity)
     const { Hypercore } = await hyperSDK({
-      persist: this.persist
+      persist: this.persist,
+      storage: './hyper/'
     })
 
     // Create a hypercore
@@ -46,11 +47,11 @@ export class HydroFile {
     await this.hypercore.ready()
   }
 
-  getCIDsForKeyword(keyword){
+  getCIDsForKeyword (keyword) {
     let node = this.keywordTrie
     const cids = []
-    for (var i = 0; i < keyword.length; i++) {
-      if(!node.children[keyword[i]]){
+    for (let i = 0; i < keyword.length; i++) {
+      if (!node.children[keyword[i]]) {
         return cids
       }
       node = node.children[keyword[i]]
@@ -59,20 +60,20 @@ export class HydroFile {
     return cids
   }
 
-  findAllCIDsAtNode(node, cids) {
-    if (node.cid){
+  findAllCIDsAtNode (node, cids) {
+    if (node.cid) {
       cids.push(node.cid)
     }
-    if (!_.isEmpty(node.children)){
-      for (const child in node.children){
+    if (!_.isEmpty(node.children)) {
+      for (const child in node.children) {
         this.findAllCIDsAtNode(node.children[child], cids)
       }
     }
   }
 
-  insertKeyword(keyword, cid) {
+  insertKeyword (keyword, cid) {
     let node = this.keywordTrie
-    for (var i = 0; i < keyword.length; i++){
+    for (let i = 0; i < keyword.length; i++) {
       if (!node.children[keyword[i]]) {
         node.children[keyword[i]] = new TrieNode(null)
       }
@@ -100,10 +101,10 @@ export class HydroFile {
 
     // set the previous CID in the new object
     const updatedThreadRootObject = {
-      '@context': {
-        id: '@id',
-        type: '@type'
-      },
+      // '@context': {
+      //   id: '@id',
+      //   type: '@type'
+      // },
       id: `hypercore://${this.hypercore.key.toString('hex')}/${type}/${name}`, // This value changes on each iteration causing issues.
       type,
       name,
@@ -115,9 +116,9 @@ export class HydroFile {
     // API: https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/DAG.md#ipfsdagputdagnode-options
 
     const updatedThreadRootCID = await this.ipfs.dag.put(updatedThreadRootObject) // Note(@DougAnderson444): This is going to return arbitrary values because of hypercore key.
-    try{
+    try {
       _.forEach(keywords, (value) => this.insertKeyword(value, updatedThreadRootCID))
-    } catch (err){
+    } catch (err) {
       console.error(err)
     }
 
