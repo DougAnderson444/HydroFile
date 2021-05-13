@@ -5,6 +5,21 @@
 	// IPFS saver
 	import { default as IPFS, CID } from "ipfs-browser-global";
 	import multihashing from "multihashing-async";
+	import { setContext } from 'svelte';
+	export let cols = {}
+	function getRandomColor(cid) {
+		if (cols[cid] !== undefined){
+		return cols[cid]
+		}
+		var letters = '0123456789ABCDEF';
+		var color = '#';
+		for (var i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+		}
+		cols[cid] = color
+		return color;
+  	}
+	setContext('getCol', getRandomColor)
 
 	let name, keywords;
 	let type = "text";

@@ -6,7 +6,9 @@
   export let key;
   export let val;
   export let expanded;
-
+	import { getContext } from 'svelte';
+	import { setContext } from 'svelte';
+	const colsFunc = getContext('getCol')
   let object, mounted;
   let isCID;
 
@@ -74,7 +76,7 @@
                 />
               {:else if key === "cid"}{key}:
                 {#if key === "cid" && isCID}
-                  <a
+                  <a style="color:{colsFunc(val)}"
                     href="https://explore.ipld.io/#/explore/{val}"
                     target="_blank">{val}</a
                   >
