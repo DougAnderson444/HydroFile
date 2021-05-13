@@ -1,11 +1,12 @@
 <script>
   import { onMount } from "svelte";
   import { default as IPFS, CID } from "ipfs-browser-global";
-
+  import { getContext } from 'svelte';
   export let breadcrumbs = []; // keys that lead back to the top
   export let key;
   export let val;
-  export let expanded;
+  export let expanded = false;
+  const colsFunc = getContext('getCol')
 
   let object, mounted;
   let isCID;
@@ -75,6 +76,7 @@
               {:else if key === "cid"}{key}:
                 {#if key === "cid" && isCID}
                   <a
+                    style="background:{colsFunc(val)};"
                     href="https://explore.ipld.io/#/explore/{val}"
                     target="_blank">{val}</a
                   >
